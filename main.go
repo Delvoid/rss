@@ -38,6 +38,10 @@ func main() {
 	mux.HandleFunc("POST /v1/feeds", apiCfg.AuthMiddleware(apiCfg.CreateFeedHandler))
 	mux.HandleFunc("GET /v1/feeds", apiCfg.GetAllFeedsHandler)
 
+	mux.HandleFunc("POST /v1/feed_follows", apiCfg.AuthMiddleware(apiCfg.CreateFeedFollowHandler))
+	mux.HandleFunc("GET /v1/feed_follows", apiCfg.AuthMiddleware(apiCfg.GetFeedFollowsHandler))
+	mux.HandleFunc("DELETE /v1/feed_follows/{feedFollowID}", apiCfg.AuthMiddleware(apiCfg.DeleteFeedFollowHandler))
+
 	server := &http.Server{
 		Addr:    ":" + appConfig.Port,
 		Handler: mux,
