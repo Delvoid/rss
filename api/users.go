@@ -37,3 +37,14 @@ func (cfg *APIConfig) CreateUserHandler(w http.ResponseWriter, r *http.Request) 
 	user := models.DatabaseUserToUser(dbUser)
 	RespondWithJSON(w, user, http.StatusCreated)
 }
+
+func (cfg *APIConfig) GetUserHandler(w http.ResponseWriter, r *http.Request) {
+	user, ok := GetUserFromContext(r.Context())
+	if !ok {
+		RespondWithError(w, "User not found in context", http.StatusInternalServerError)
+		return
+	}
+
+	respondUser := models.DatabaseUserToUser(user)
+	RespondWithJSON(w, respondUser, http.StatusOK)
+}

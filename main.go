@@ -33,6 +33,7 @@ func main() {
 	mux.HandleFunc("GET /v1/health", apiCfg.HealthHandler)
 	mux.HandleFunc("GET /v1/err", apiCfg.ErrorHandler)
 	mux.HandleFunc("POST /v1/users", apiCfg.CreateUserHandler)
+	mux.HandleFunc("GET /v1/users", apiCfg.AuthMiddleware(apiCfg.GetUserHandler))
 
 	server := &http.Server{
 		Addr:    ":" + appConfig.Port,
