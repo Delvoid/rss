@@ -36,6 +36,7 @@ func main() {
 	mux.HandleFunc("GET /v1/users", apiCfg.AuthMiddleware(apiCfg.GetUserHandler))
 
 	mux.HandleFunc("POST /v1/feeds", apiCfg.AuthMiddleware(apiCfg.CreateFeedHandler))
+	mux.HandleFunc("GET /v1/feeds", apiCfg.GetAllFeedsHandler)
 
 	server := &http.Server{
 		Addr:    ":" + appConfig.Port,

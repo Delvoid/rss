@@ -45,3 +45,18 @@ func (cfg *APIConfig) CreateFeedHandler(w http.ResponseWriter, r *http.Request) 
 
 	RespondWithJSON(w, models.DatabaseFeedToFeed(feed), http.StatusCreated)
 }
+
+func (cfg *APIConfig) GetAllFeedsHandler(w http.ResponseWriter, r *http.Request) {
+	feeds, err := cfg.DB.GetAllFeeds(r.Context())
+	if err != nil {
+		RespondWithError(w, "Failed to get feeds", http.StatusInternalServerError)
+		return
+	}
+
+	respondFeeds := make([]models.Feed, len(feeds))
+	for i, dbFeed := range feeds {
+		respondFeeds[i] = models.DatabaseFeedToFeed(dbFeed)
+	}
+
+	RespondWithJSON(w, respondFeeds, http.StatusOK)
+}
