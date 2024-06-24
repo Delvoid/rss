@@ -39,9 +39,9 @@ func (cfg *APIConfig) CreateUserHandler(w http.ResponseWriter, r *http.Request) 
 }
 
 func (cfg *APIConfig) GetUserHandler(w http.ResponseWriter, r *http.Request) {
-	user, ok := GetUserFromContext(r.Context())
+	user, ok := GetUserFromContext(r)
 	if !ok {
-		RespondWithError(w, "User not found in context", http.StatusInternalServerError)
+		RespondWithError(w, "Unauthorized", http.StatusInternalServerError)
 		return
 	}
 

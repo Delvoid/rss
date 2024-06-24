@@ -49,9 +49,8 @@ func WithUser(ctx context.Context, user database.User) context.Context {
 	return context.WithValue(ctx, userContextKey, user)
 }
 
-// GetUserFromContext retrieves the user from the context
-func GetUserFromContext(ctx context.Context) (database.User, bool) {
-	user, ok := ctx.Value(userContextKey).(database.User)
+func GetUserFromContext(r *http.Request) (database.User, bool) {
+	user, ok := r.Context().Value(userContextKey).(database.User)
 	return user, ok
 }
 
