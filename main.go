@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/Delvoid/go_rss/api"
 	"github.com/Delvoid/go_rss/config"
@@ -27,6 +28,10 @@ func main() {
 
 	dbQueries := database.New(db)
 	apiCfg := api.NewAPIConfig(dbQueries)
+
+	// Start the worker for fetching feeds
+	w := NewWorker(dbQueries, 60*time.Second)
+	go w.Start()
 
 	mux := http.NewServeMux()
 
