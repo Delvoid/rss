@@ -23,7 +23,7 @@ func NewWorker(db *database.Queries, interval time.Duration) *Worker {
 
 func (w *Worker) Start() {
 	log.Println("Starting worker...")
-	for range w.ticker.C {
+	for ; ; <-w.ticker.C {
 		w.FetchFeeds()
 	}
 }
@@ -36,20 +36,17 @@ func (w *Worker) FetchFeeds() {
 		return
 	}
 
+	log.Printf("Found %d feeds to fetch", len(feeds))
+
 	var wg sync.WaitGroup
 	for _, feed := range feeds {
 		wg.Add(1)
 		go func(feed database.Feed) {
 			defer wg.Done()
-			rssFeed, err := FetchFeed(feed.Url)
+			err := FetchFeed(w.db, feed)
 			if err != nil {
 				log.Printf("Error fetching feed %s: %v", feed.Url, err)
 				return
-			}
-
-			log.Printf("Feed: %s", feed.Name)
-			for _, item := range rssFeed.Channel.Items {
-				log.Printf("  - %s", item.Title)
 			}
 
 			_, err = w.db.MarkFeedFetched(context.Background(), feed.ID)
